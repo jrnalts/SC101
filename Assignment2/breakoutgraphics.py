@@ -12,7 +12,7 @@ from campy.gui.events.mouse import onmouseclicked, onmousemoved
 import random
 
 BRICK_SPACING = 5      # Space between bricks (in pixels). This space is used for horizontal and vertical spacing
-BRICK_WIDTH = 40       # Height of a brick (in pixels)
+BRICK_WIDTH = 40       # Width of a brick (in pixels)
 BRICK_HEIGHT = 15      # Height of a brick (in pixels)
 BRICK_ROWS = 10        # Number of rows of bricks
 BRICK_COLS = 10        # Number of columns of bricks
@@ -24,6 +24,7 @@ PADDLE_OFFSET = 50     # Vertical offset of the paddle from the window bottom (i
 INITIAL_Y_SPEED = 3    # Initial vertical speed for the ball
 MAX_X_SPEED = 3        # Maximum initial horizontal speed for the ball
 NUM_LIVES = 3		   # Number of attempts
+COLORS = ('red', 'sandybrown', 'orange', 'gold', 'yellow', 'greenyellow', 'green', 'cadetblue', 'blue', 'purple')
 
 
 class BreakoutGraphics:
@@ -47,16 +48,23 @@ class BreakoutGraphics:
         self.vy = 0
         self.set_ball()
 
-        # Default initial velocity for the ball
         # Initialize our mouse listeners
         onmouseclicked(self.handle_click)
+        onmousemoved(self.paddle_move)
 
         # Draw bricks
+        self.brick_rows = brick_rows
+        self.brick_cols = brick_cols
+        self.brick_width = brick_width
+        self.brick_height = brick_height
+        self.brick_offset = brick_offset
+        self.brick_spacing = brick_spacing
+        self.set_bricks()
 
     # initialize paddle
     def set_paddle(self):
         self.paddle.filled = True
-        self.paddle.fill_color = self.paddle.color = 'blue'
+        self.paddle.fill_color = self.paddle.color = 'black'
         self.window.add(self.paddle,
                         x=(self.window.width - self.paddle.width) / 2,
                         y=(self.window.height - self.paddle.paddle_offset))
@@ -64,28 +72,40 @@ class BreakoutGraphics:
     # initialize ball
     def set_ball(self):
         self.ball.filled = True
-        self.ball.fill_color = self.ball.color = 'peru'
+        self.ball.fill_color = self.ball.color = 'black'
         self.ball.lives = NUM_LIVES
         self.set_ball_position()
+        # Default initial velocity for the ball
         self.set_ball_velocity()
         self.window.add(self.ball)
 
     # give ball a random position
     def set_ball_position(self):
-        self.ball.x = random.randint(0, self.window.width - self.ball.width)
-        self.ball.y = random.randint(0, self.window.height - self.ball.height)
+        self.ball.x = (self.window.width - self.ball.width) / 2
+        self.ball.y = (self.window.height - self.ball.height) / 2
 
     # give ball a random velocity
     def set_ball_velocity(self):
-        self.vx = random.randint(0, MAX_X_SPEED)
+        self.vx = random.randint(1, MAX_X_SPEED)
         self.vy = INITIAL_Y_SPEED
         if random.random() > 0.5:
             self.vx *= -1
         if random.random() > 0.5:
             self.vy *= -1
 
+    def set_bricks(self):
+        for row in range(self.brick_rows):
+            for col in range(self.brick_cols):
+                brick = GRect(self.brick_width, self.brick_height)
+                brick.filled = True
+                brick.color = brick.fill_color = COLORS[col]
+
+                brick_x = row * (self.brick_width + self.brick_spacing)
+                brick_y = self.brick_offset + col * (self.brick_height + self.brick_spacing)
+                self.window.add(brick, x=brick_x, y=brick_y)
+
     # ball bump into paddle
-    def ball_in_zone(self):
+    def ball_hits_paddle(self):
         zone_left = self.paddle.x
         zone_right = self.paddle.x + self.paddle.width
         is_x_in_zone = self.ball.x + self.ball.width >= zone_left and self.ball.x <= zone_right
@@ -97,5 +117,10 @@ class BreakoutGraphics:
         return is_x_in_zone and is_y_in_zone
 
     def handle_click(self, event):
-        if self.window.get_object_at(event.x, event.y) == self.ball:
-            self.set_ball()
+        return True
+        # self.window.get_object_at(event.x, event.y) == self.ball
+
+    def paddle_move(self, event):
+        if self.window.width - self.paddle.width / 2 >= event.x >= self.paddle.width / 2:
+            self.paddle.x = event.x - self.paddle.width / 2
+

@@ -25,16 +25,15 @@ def main():
         if lives == 0:
             break
 
-        # Gate keeper
-
         # Ball touch window edge
-        if graphics.ball_in_zone() or ball.x <= 0 or ball.x + ball.width >= graphics.window.width:
+        if graphics.ball_hits_paddle() or ball.x <= 0 or ball.x + ball.width >= graphics.window.width:
             graphics.vx *= -1
-        if graphics.ball_in_zone() or ball.y <= 0 or ball.y + ball.height >= graphics.window.height:
+        if graphics.ball_hits_paddle() or ball.y <= 0 or ball.y + ball.height >= graphics.window.height:
             graphics.vy *= -1
 
         # Update
-        ball.move(graphics.vx, graphics.vy)
+        # while graphics.is_clicked:
+        # ball.move(graphics.vx, graphics.vy)
 
         # Pause
         pause(FRAME_RATE)

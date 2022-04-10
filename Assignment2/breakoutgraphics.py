@@ -23,11 +23,11 @@ PADDLE_HEIGHT = 15     # Height of the paddle (in pixels)
 PADDLE_OFFSET = 50     # Vertical offset of the paddle from the window bottom (in pixels)
 INITIAL_Y_SPEED = 3    # Initial vertical speed for the ball
 MAX_X_SPEED = 3        # Maximum initial horizontal speed for the ball
-NUM_LIVES = 3		   # Number of attempts
 COLORS = ('red', 'sandybrown', 'orange', 'gold', 'yellow', 'greenyellow', 'green', 'cadetblue', 'blue', 'purple')
 
 
 class BreakoutGraphics:
+    # Constructor
     def __init__(self, ball_radius=BALL_RADIUS, paddle_width=PADDLE_WIDTH, paddle_height=PADDLE_HEIGHT,
                  paddle_offset=PADDLE_OFFSET, brick_rows=BRICK_ROWS, brick_cols=BRICK_COLS, brick_width=BRICK_WIDTH,
                  brick_height=BRICK_HEIGHT, brick_offset=BRICK_OFFSET, brick_spacing=BRICK_SPACING, title='Breakout'):
@@ -39,14 +39,20 @@ class BreakoutGraphics:
 
         # Create a paddle
         self.paddle = GRect(width=paddle_width, height=paddle_height)
-        self.paddle.paddle_offset = paddle_offset
+        self.paddle_offset = paddle_offset
         self.set_paddle()
 
         # Center a filled ball in the graphical window
         self.ball = GOval(ball_radius * 2, ball_radius * 2)
-        self.vx = 0
-        self.vy = 0
         self.set_ball()
+
+        # Set velocity for the ball
+        self.__vx = 0
+        self.__vy = 0
+        self.set_ball_velocity()
+
+        # The switch to check game is started or not
+        self.is_started = False
 
         # Initialize our mouse listeners
         onmouseclicked(self.handle_click)
@@ -61,38 +67,47 @@ class BreakoutGraphics:
         self.brick_spacing = brick_spacing
         self.set_bricks()
 
-    # initialize paddle
+    # Methods
+    # Default initial values for the paddle
     def set_paddle(self):
         self.paddle.filled = True
         self.paddle.fill_color = self.paddle.color = 'black'
-        self.window.add(self.paddle,
-                        x=(self.window.width - self.paddle.width) / 2,
-                        y=(self.window.height - self.paddle.paddle_offset))
+        self.paddle.x = (self.window.width - self.paddle.width) / 2
+        self.paddle.y = self.window.height - self.paddle_offset
+        self.window.add(self.paddle)
 
-    # initialize ball
+    # Default initial values for the ball
     def set_ball(self):
         self.ball.filled = True
         self.ball.fill_color = self.ball.color = 'black'
-        self.ball.lives = NUM_LIVES
-        self.set_ball_position()
-        # Default initial velocity for the ball
-        self.set_ball_velocity()
-        self.window.add(self.ball)
-
-    # give ball a random position
-    def set_ball_position(self):
         self.ball.x = (self.window.width - self.ball.width) / 2
         self.ball.y = (self.window.height - self.ball.height) / 2
+        self.window.add(self.ball)
 
-    # give ball a random velocity
+    # Default initial velocity for the ball
     def set_ball_velocity(self):
-        self.vx = random.randint(1, MAX_X_SPEED)
-        self.vy = INITIAL_Y_SPEED
+        self.__vx = random.randint(1, MAX_X_SPEED)
+        self.__vy = INITIAL_Y_SPEED
         if random.random() > 0.5:
-            self.vx *= -1
-        if random.random() > 0.5:
-            self.vy *= -1
+            self.__vx *= -1
 
+    # Getters of velocity
+    def get_vx(self):
+        return self.__vx
+
+    def get_vy(self):
+        return self.__vy
+
+    # Setters of velocity
+    def set_vx(self):
+        self.__vx *= -1
+        return self.__vx
+
+    def set_vy(self):
+        self.__vy *= -1
+        return self.__vy
+
+    # Build all bricks on the window
     def set_bricks(self):
         for row in range(self.brick_rows):
             for col in range(self.brick_cols):
@@ -104,23 +119,25 @@ class BreakoutGraphics:
                 brick_y = self.brick_offset + col * (self.brick_height + self.brick_spacing)
                 self.window.add(brick, x=brick_x, y=brick_y)
 
-    # ball bump into paddle
+    # The ball bump into paddle
     def ball_hits_paddle(self):
-        zone_left = self.paddle.x
-        zone_right = self.paddle.x + self.paddle.width
-        is_x_in_zone = self.ball.x + self.ball.width >= zone_left and self.ball.x <= zone_right
+        paddle_left = self.paddle.x
+        paddle_right = self.paddle.x + self.paddle.width
+        is_x_hit_paddle = self.ball.x + self.ball.width >= paddle_left and self.ball.x <= paddle_right
 
-        zone_top = self.paddle.y
-        zone_bottom = self.paddle.y + self.paddle.height
-        is_y_in_zone = self.ball.y + self.ball.height >= zone_top and self.ball.y <= zone_bottom
+        paddle_top = self.paddle.y
+        paddle_bottom = self.paddle.y + self.paddle.height
+        is_y_hit_paddle = self.ball.y + self.ball.height >= paddle_top and self.ball.y <= paddle_bottom
 
-        return is_x_in_zone and is_y_in_zone
+        return is_x_hit_paddle and is_y_hit_paddle
 
+    # Mouse listeners
     def handle_click(self, event):
-        return True
-        # self.window.get_object_at(event.x, event.y) == self.ball
+        # if self.get_vx() != 0:
+        #     return
+        self.is_started = True
+        return self.is_started
 
     def paddle_move(self, event):
         if self.window.width - self.paddle.width / 2 >= event.x >= self.paddle.width / 2:
             self.paddle.x = event.x - self.paddle.width / 2
-

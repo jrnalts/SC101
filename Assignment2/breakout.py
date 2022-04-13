@@ -27,7 +27,7 @@ def main():
         check_if_ball_touch_window_edge(graphics)
 
         # Update
-        if graphics.is_started:
+        if graphics.started:
             ball.move(graphics.get_vx(), graphics.get_vy())
 
         # Pause
@@ -49,8 +49,10 @@ def check_if_ball_touch_window_edge(graphics):
     ball = graphics.ball
     if graphics.ball_hits_paddle() or ball.x <= 0 or ball.x + ball.width >= graphics.window.width:
         graphics.set_vx()
-    if graphics.ball_hits_paddle() or ball.y <= 0 or ball.y + ball.height >= graphics.window.height:
+    if graphics.ball_hits_paddle() or ball.y <= 0:
         graphics.set_vy()
+    if ball.y + ball.height >= graphics.window.height:
+        graphics.reset()
 
 
 def ball_corners(obj):

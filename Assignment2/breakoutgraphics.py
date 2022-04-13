@@ -52,7 +52,7 @@ class BreakoutGraphics:
         self.set_ball_velocity()
 
         # The switch to check game is started or not
-        self.is_started = False
+        self.started = False
 
         # Initialize our mouse listeners
         onmouseclicked(self.handle_click)
@@ -79,11 +79,7 @@ class BreakoutGraphics:
 
     # Default initial values for the ball
     def set_ball(self):
-        self.ball.filled = True
-        self.ball.fill_color = self.ball.color = 'black'
-        self.ball.x = (self.window.width - self.ball.width) / 2
-        self.ball.y = (self.window.height - self.ball.height) / 2
-        self.window.add(self.ball)
+        self.reset()
 
     # Default initial velocity for the ball
     def set_ball_velocity(self):
@@ -93,6 +89,10 @@ class BreakoutGraphics:
             self.__vx *= -1
 
     # Getters of velocity
+    def get_vx_vy(self):
+        self.get_vx()
+        self.get_vy()
+
     def get_vx(self):
         return self.__vx
 
@@ -138,11 +138,25 @@ class BreakoutGraphics:
 
     # Mouse listeners
     def handle_click(self, event):
-        # if self.get_vx() != 0:
-        #     return
-        self.is_started = True
-        return self.is_started
+        if event.y > 0:
+            self.started = True
+        return self.started
 
+    # Define range of paddle moving
     def paddle_move(self, event):
         if self.window.width - self.paddle.width / 2 >= event.x >= self.paddle.width / 2:
             self.paddle.x = event.x - self.paddle.width / 2
+
+    # Set for game start or restart
+    def reset(self):
+        self.started = False
+        self.__vx = 0
+        self.__vy = 0
+        self.ball.filled = True
+        self.ball.fill_color = self.ball.color = 'black'
+        self.ball.x = (self.window.width - self.ball.width) / 2
+        self.ball.y = (self.window.height - self.ball.height) / 2
+        self.window.add(self.ball)
+
+    def is_init(self):
+        self

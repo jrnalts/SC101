@@ -16,23 +16,15 @@ NUM_LIVES = 3		   # Number of attempts
 
 def main():
     graphics = BreakoutGraphics()
+    ball = graphics.ball
 
     # Add the animation loop here!
-    ball = graphics.ball
-    lives = NUM_LIVES
-
     while True:
-        if lives == 0:
-            break
+        # Ball Collision
+        ball_collision(graphics)
 
-        # Bounce
-        # self.window.get_object_at(event.x, event.y) == self.ball
-
-        # Ball touch window edge
-        if graphics.ball_hits_paddle() or ball.x <= 0 or ball.x + ball.width >= graphics.window.width:
-            graphics.set_vx()
-        if graphics.ball_hits_paddle() or ball.y <= 0 or ball.y + ball.height >= graphics.window.height:
-            graphics.set_vy()
+        # Ball touch window Edge
+        check_if_ball_touch_window_edge(graphics)
 
         # Update
         if graphics.is_started:
@@ -40,6 +32,34 @@ def main():
 
         # Pause
         pause(FRAME_RATE)
+
+
+def ball_collision(graphics):
+    ball = graphics.ball
+    for x, y in ball_corners(ball):  # Get 4 corners of the ball
+        obj = graphics.window.get_object_at(x, y)
+        if obj is not None:
+            graphics.set_vx_vy()
+            if obj is not graphics.paddle and isinstance(obj, type(graphics.paddle)):
+                graphics.window.remove(obj)
+                break  # if one corner has collided
+
+
+def check_if_ball_touch_window_edge(graphics):
+    ball = graphics.ball
+    if graphics.ball_hits_paddle() or ball.x <= 0 or ball.x + ball.width >= graphics.window.width:
+        graphics.set_vx()
+    if graphics.ball_hits_paddle() or ball.y <= 0 or ball.y + ball.height >= graphics.window.height:
+        graphics.set_vy()
+
+
+def ball_corners(obj):
+    return [
+        (obj.x, obj.y),
+        (obj.x + obj.width, obj.y),
+        (obj.x, obj.y + obj.height),
+        (obj.x + obj.width, obj.y + obj.height)
+    ]
 
 
 if __name__ == '__main__':

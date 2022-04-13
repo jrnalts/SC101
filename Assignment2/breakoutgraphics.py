@@ -59,6 +59,7 @@ class BreakoutGraphics:
         onmousemoved(self.paddle_move)
 
         # Draw bricks
+        self.brick = None
         self.brick_rows = brick_rows
         self.brick_cols = brick_cols
         self.brick_width = brick_width
@@ -99,6 +100,10 @@ class BreakoutGraphics:
         return self.__vy
 
     # Setters of velocity
+    def set_vx_vy(self):
+        self.set_vx()
+        self.set_vy()
+
     def set_vx(self):
         self.__vx *= -1
         return self.__vx

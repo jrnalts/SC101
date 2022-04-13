@@ -4,7 +4,7 @@ Adapted from Eric Roberts's Breakout by
 Sonja Johnson-Yu, Kylie Jue, Nick Bowman,
 and Jerry Liao.
 
-YOUR DESCRIPTION HERE
+BREAKOUT GAME, TRY IT!
 """
 
 from campy.gui.events.timer import pause

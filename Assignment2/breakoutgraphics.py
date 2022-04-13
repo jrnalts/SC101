@@ -49,7 +49,6 @@ class BreakoutGraphics:
         # Set velocity for the ball
         self.__vx = 0
         self.__vy = 0
-        self.set_ball_velocity()
 
         # The switch to check game is started or not
         self.started = False
@@ -138,6 +137,7 @@ class BreakoutGraphics:
 
     # Mouse listeners
     def handle_click(self, event):
+        self.set_ball_velocity()
         if event.y > 0:
             self.started = True
         return self.started

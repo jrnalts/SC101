@@ -32,10 +32,11 @@ class BreakoutGraphics(BreakoutGraphicsSuper):
 
     # Mouse listeners
     def handle_click(self, event):
+        if self.get_vy() > 0 or event.y < 0:
+            return
+
         self.set_ball_velocity()
-        if event.y > 0:
-            self.started = True
-        return self.started
+        self.started = True
 
     # Define range of paddle moving
     def paddle_move(self, event):

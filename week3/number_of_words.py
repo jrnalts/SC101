@@ -11,7 +11,12 @@ FILE = 'romeojuliet.txt'
 
 
 def main():
-    pass
+    with open(FILE, 'r') as f:
+        total = 0
+        for line in f:
+            tokens = line.split()
+            total += len(tokens)
+        print(total)
 
 
 if __name__ == '__main__':

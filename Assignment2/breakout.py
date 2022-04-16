@@ -40,20 +40,19 @@ def main():
 def ball_collision():
     for x, y in graphics.ball_corners():  # Get 4 corners of the ball
         obj = graphics.window.get_object_at(x, y)
-        if obj is not None:
-            if graphics.get_vy() > 0:
-                graphics.set_vx()
-            graphics.set_vy()
-
-            if obj is not graphics.paddle and isinstance(obj, type(graphics.paddle)):
+        if isinstance(obj, type(graphics.paddle)):
+            if graphics.ball_hits_paddle():
+                pass
+            elif obj is not graphics.paddle:
                 graphics.window.remove(obj)
-                break  # one corner has collided
+            graphics.set_vy()
+            break  # one corner has collided
 
 
 def check_if_ball_touch_window_edge():
-    if graphics.ball_hits_paddle() or ball.x <= 0 or ball.x + ball.width >= graphics.window.width:
+    if ball.x <= 0 or ball.x + ball.width >= graphics.window.width:
         graphics.set_vx()
-    if graphics.ball_hits_paddle() or ball.y <= 0:
+    if ball.y <= 0:
         graphics.set_vy()
     if ball.y + ball.height >= graphics.window.height:
         graphics.set_ball()

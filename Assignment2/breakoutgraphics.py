@@ -20,10 +20,8 @@ class BreakoutGraphics(BreakoutGraphicsSuper):
 
     # The ball bump into paddle
     def ball_hits_paddle(self):
-        is_x_hit_paddle = self.ball.x + self.ball.width >= self.paddle.x and \
-            self.ball.x <= self.paddle.x + self.paddle.width
-        is_y_hit_paddle = self.ball.y + self.ball.height >= self.paddle.y and \
-            self.ball.y <= self.paddle.y + self.paddle.height
+        is_x_hit_paddle = self.ball.x + self.ball.width >= self.paddle.x and self.ball.x <= self.paddle.x + self.paddle.width
+        is_y_hit_paddle = self.ball.y + self.ball.height >= self.paddle.y
 
         return is_x_hit_paddle and is_y_hit_paddle
 

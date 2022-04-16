@@ -13,18 +13,21 @@ from breakoutgraphics import BreakoutGraphics
 FRAME_RATE = 1000 / 120  # 120 frames per second
 NUM_LIVES = 3		   # Number of attempts
 
+# Global variables
+graphics = BreakoutGraphics()
+ball = graphics.ball
+
 
 def main():
-    graphics = BreakoutGraphics()
-    ball = graphics.ball
+    global graphics, ball
 
     # Add the animation loop here!
     while True:
         # Ball Collision
-        ball_collision(graphics)
+        ball_collision()
 
         # Ball touch window Edge
-        check_if_ball_touch_window_edge(graphics)
+        check_if_ball_touch_window_edge()
 
         # Update
         if graphics.started:
@@ -34,9 +37,8 @@ def main():
         pause(FRAME_RATE)
 
 
-def ball_collision(graphics):
-    ball = graphics.ball
-    for x, y in ball_corners(ball):  # Get 4 corners of the ball
+def ball_collision():
+    for x, y in graphics.ball_corners():  # Get 4 corners of the ball
         obj = graphics.window.get_object_at(x, y)
         if obj is not None:
             if graphics.get_vy() > 0:
@@ -48,23 +50,13 @@ def ball_collision(graphics):
                 break  # one corner has collided
 
 
-def check_if_ball_touch_window_edge(graphics):
-    ball = graphics.ball
+def check_if_ball_touch_window_edge():
     if graphics.ball_hits_paddle() or ball.x <= 0 or ball.x + ball.width >= graphics.window.width:
         graphics.set_vx()
     if graphics.ball_hits_paddle() or ball.y <= 0:
         graphics.set_vy()
     if ball.y + ball.height >= graphics.window.height:
         graphics.set_ball()
-
-
-def ball_corners(obj):
-    return [
-        (obj.x, obj.y),
-        (obj.x + obj.width, obj.y),
-        (obj.x, obj.y + obj.height),
-        (obj.x + obj.width, obj.y + obj.height)
-    ]
 
 
 if __name__ == '__main__':

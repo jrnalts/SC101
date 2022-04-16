@@ -11,8 +11,8 @@ from breakoutgraphics_super import BreakoutGraphicsSuper
 
 
 class BreakoutGraphics(BreakoutGraphicsSuper):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **args):
+        super().__init__(**args)
 
         # Initialize our mouse listeners
         onmouseclicked(self.handle_click)
@@ -20,13 +20,10 @@ class BreakoutGraphics(BreakoutGraphicsSuper):
 
     # The ball bump into paddle
     def ball_hits_paddle(self):
-        paddle_left = self.paddle.x
-        paddle_right = self.paddle.x + self.paddle.width
-        is_x_hit_paddle = self.ball.x + self.ball.width >= paddle_left and self.ball.x <= paddle_right
-
-        paddle_top = self.paddle.y
-        paddle_bottom = self.paddle.y + self.paddle.height
-        is_y_hit_paddle = self.ball.y + self.ball.height >= paddle_top and self.ball.y <= paddle_bottom
+        is_x_hit_paddle = self.ball.x + self.ball.width >= self.paddle.x and \
+            self.ball.x <= self.paddle.x + self.paddle.width
+        is_y_hit_paddle = self.ball.y + self.ball.height >= self.paddle.y and \
+            self.ball.y <= self.paddle.y + self.paddle.height
 
         return is_x_hit_paddle and is_y_hit_paddle
 

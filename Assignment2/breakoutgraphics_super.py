@@ -89,6 +89,15 @@ class BreakoutGraphicsSuper:
         self.ball.y = (self.window.height - self.ball.height) / 2
         self.window.add(self.ball)
 
+    def ball_corners(self):
+        obj = self.ball
+        return [
+            (obj.x, self.ball.y),
+            (obj.x + obj.width, obj.y),
+            (obj.x, obj.y + obj.height),
+            (obj.x + obj.width, obj.y + obj.height)
+        ]
+
     # Set for game start or restart
     def reset(self):
         self.__vx = 0

@@ -60,6 +60,13 @@ class BreakoutGraphicsSuper:
         # The switch to check game is started or not
         self.started = False
 
+    @staticmethod
+    def corners(obj):
+        return [(obj.x, obj.y),
+                (obj.x + obj.width, obj.y),
+                (obj.x, obj.y + obj.height),
+                (obj.x + obj.width, obj.y + obj.height)]
+
     # Default initial values for the paddle
     def set_paddle(self):
         self.paddle.filled = True
@@ -68,6 +75,11 @@ class BreakoutGraphicsSuper:
         self.paddle.y = self.window.height - self.paddle_offset
         self.window.add(self.paddle)
 
+    # Define range of paddle moving
+    def paddle_move(self, event):
+        if self.window.width - self.paddle.width / 2 >= event.x >= self.paddle.width / 2:
+            self.paddle.x = event.x - self.paddle.width / 2
+
     # Build all bricks on the window
     def set_bricks(self):
         for row in range(self.brick_rows):
@@ -75,7 +87,6 @@ class BreakoutGraphicsSuper:
                 brick = GRect(self.brick_width, self.brick_height)
                 brick.filled = True
                 brick.color = brick.fill_color = COLORS[col]
-
                 brick_x = row * (self.brick_width + self.brick_spacing)
                 brick_y = self.brick_offset + col * (self.brick_height + self.brick_spacing)
                 self.window.add(brick, x=brick_x, y=brick_y)
@@ -89,15 +100,6 @@ class BreakoutGraphicsSuper:
         self.ball.y = (self.window.height - self.ball.height) / 2
         self.window.add(self.ball)
 
-    def ball_corners(self):
-        obj = self.ball
-        return [
-            (obj.x, self.ball.y),
-            (obj.x + obj.width, obj.y),
-            (obj.x, obj.y + obj.height),
-            (obj.x + obj.width, obj.y + obj.height)
-        ]
-
     # Set for game start or restart
     def reset(self):
         self.__vx = 0
@@ -108,7 +110,7 @@ class BreakoutGraphicsSuper:
         self.__vx = random.randint(1, MAX_X_SPEED)
         self.__vy = INITIAL_Y_SPEED
         if random.random() > 0.5:
-            self.__vx *= -1
+            self.set_vx()
 
     # Getters and Setters of velocity
     def get_vx(self):

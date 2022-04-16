@@ -16,13 +16,16 @@ NUM_LIVES = 3		   # Number of attempts
 # Global variables
 graphics = BreakoutGraphics()
 ball = graphics.ball
+lives = NUM_LIVES
 
 
 def main():
-    global graphics, ball
-
-    # Add the animation loop here!
+    global graphics, ball, lives
     while True:
+        # GAME OVER
+        if lives <= 0:
+            break
+
         # Ball Collision
         ball_collision()
 
@@ -38,23 +41,23 @@ def main():
 
 
 def ball_collision():
-    for x, y in graphics.ball_corners():  # Get 4 corners of the ball
+    for x, y in graphics.corners(ball):  # Get 4 corners of the ball
         obj = graphics.window.get_object_at(x, y)
         if isinstance(obj, type(graphics.paddle)):
-            if graphics.ball_hits_paddle():
-                pass
-            elif obj is not graphics.paddle:
+            if obj is not graphics.paddle:
                 graphics.window.remove(obj)
             graphics.set_vy()
-            break  # one corner has collided
+            break  # it means one corner has collided
 
 
 def check_if_ball_touch_window_edge():
+    global lives
     if ball.x <= 0 or ball.x + ball.width >= graphics.window.width:
         graphics.set_vx()
     if ball.y <= 0:
         graphics.set_vy()
     if ball.y + ball.height >= graphics.window.height:
+        lives -= 1
         graphics.set_ball()
 
 

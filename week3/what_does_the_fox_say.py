@@ -17,7 +17,7 @@ def main():
     sounds['Cat'] = 'meow'
     sounds['Bird'] = 'tweet'
     sounds['Fox'] = 'dindindindindindinding'
-    sounds['Fox'] = 'Wapapapapapapow'
+    sounds['Fox'] = 'wapapapapapapow'
     print_dict(sounds)
 
 

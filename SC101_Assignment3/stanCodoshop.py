@@ -78,16 +78,24 @@ def solve(images):
     width = images[0].width
     height = images[0].height
     result = SimpleImage.blank(width, height)
-    
-    # Write code to populate image and create the 'ghost' effect
-    red_px = SimpleImage.blank(20, 20, 'red').get_pixel(0, 0)
-    green_px = SimpleImage.blank(20, 20, 'green').get_pixel(0, 0)
-    blue_px = SimpleImage.blank(20, 20, 'blue').get_pixel(0, 0)
-    best = get_best_pixel([green_px, blue_px, blue_px])
-    print(best.red, best.green, best.blue)
+
+    for x in range(width):
+        for y in range(height):
+            best = get_best_pixel(img_pixels(images, x, y))
+            result.get_pixel(x, y).red = best.red
+            result.get_pixel(x, y).green = best.green
+            result.get_pixel(x, y).blue = best.blue
 
     print("Displaying image!")
     result.show()
+
+
+def img_pixels(images, x, y):
+    pixels = []
+    for image in images:
+        pixels.append(image.get_pixel(x, y))
+
+    return pixels
 
 
 def jpgs_in_dir(dir):

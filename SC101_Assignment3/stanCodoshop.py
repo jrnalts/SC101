@@ -56,7 +56,14 @@ def get_best_pixel(pixels):
     Returns:
         best (Pixel): the pixel which has the closest color to the average
     """
-    pass
+    r, g, b = get_average(pixels)
+    lst = []
+    for pixel in pixels:
+        lst.append((pixel, get_pixel_dist(pixel, r, g, b)))
+
+    # Get first tuple key with ascending sort with color distance
+    best_pixel = sorted(lst, key=lambda e: e[1])[0][0]
+    return best_pixel
 
 
 def solve(images):
@@ -76,7 +83,8 @@ def solve(images):
     red_px = SimpleImage.blank(20, 20, 'red').get_pixel(0, 0)
     green_px = SimpleImage.blank(20, 20, 'green').get_pixel(0, 0)
     blue_px = SimpleImage.blank(20, 20, 'blue').get_pixel(0, 0)
-    print(get_average([green_px, green_px, green_px, blue_px]))
+    best = get_best_pixel([green_px, blue_px, blue_px])
+    print(best.red, best.green, best.blue)
 
     print("Displaying image!")
     result.show()

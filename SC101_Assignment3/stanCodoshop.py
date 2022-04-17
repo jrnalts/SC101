@@ -29,7 +29,7 @@ def get_pixel_dist(pixel, red, green, blue):
     return math.sqrt(rgb_dist)
 
 
-def get_average(pixels):
+def get_average(pixels, tr=0, tg=0, tb=0):
     """
     Given a list of pixels, finds their average red, blue, and green values.
 
@@ -40,7 +40,11 @@ def get_average(pixels):
         rgb (List[int]): a list of average red, green, and blue values of the pixels
                         (returns in order: [red, green, blue])
     """
-    pass
+    for pixel in pixels:
+        tr += pixel.red
+        tg += pixel.green
+        tb += pixel.blue
+    return [tr // len(pixels), tg // len(pixels), tb // len(pixels)]
 
 
 def get_best_pixel(pixels):
@@ -69,9 +73,10 @@ def solve(images):
     result = SimpleImage.blank(width, height)
     
     # Write code to populate image and create the 'ghost' effect
-    green_im = SimpleImage.blank(20, 20, 'green')
-    green_pixel = green_im.get_pixel(0, 0)
-    print(get_pixel_dist(green_pixel, 5, 255, 10))
+    red_px = SimpleImage.blank(20, 20, 'red').get_pixel(0, 0)
+    green_px = SimpleImage.blank(20, 20, 'green').get_pixel(0, 0)
+    blue_px = SimpleImage.blank(20, 20, 'blue').get_pixel(0, 0)
+    print(get_average([green_px, green_px, green_px, blue_px]))
 
     print("Displaying image!")
     result.show()

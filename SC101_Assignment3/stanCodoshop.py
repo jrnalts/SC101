@@ -65,6 +65,10 @@ def get_best_pixel(pixels):
     best_pixel = sorted(lst, key=lambda e: e[1])[0][0]
     return best_pixel
 
+    # Better solution:
+    lst = [(dist1, p1), (dist2, p2), (dist3, p3)]
+    best_dist, bet_p = min(lst, key=lambda t: t[0])
+
 
 def solve(images):
     """

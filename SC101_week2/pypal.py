@@ -37,10 +37,13 @@ class Pypal:
     @staticmethod
     def bank():
         my_account = Pypal('Andrew', balance=1000, withdraw_limit=700)
-        my_account.withdraw(500)
-        my_account.withdraw(1000)
-        my_account.withdraw(600)
+        print(my_account)
+        # my_account.withdraw(500)
+        # my_account.withdraw(1000)
+        # my_account.withdraw(600)
 
+    def __str__(self):
+        return f'Name: {self._name} / Money: {self.__balance} / WL: {self._withdraw_limit}'
 
 # def bank():
 #     my_account = Pypal('Andrew', balance=1000, withdraw_limit=700)

@@ -24,7 +24,17 @@ def add_data_for_name(name_data, year, rank, name):
         This function modifies the name_data dict to store the provided
         name, year, and rank. This function does not return any value.
     """
-    pass
+    if name not in name_data:  # New Name
+        name_data[name] = {
+            year: rank
+        }
+    else:
+        existed_name = name_data[name]
+        if year not in existed_name:  # New year data
+            existed_name[year] = rank
+        else:
+            if int(rank) < int(existed_name[year]):  # Keep the higher rank left
+                existed_name[year] = rank
 
 
 def add_file(name_data, filename):
@@ -40,7 +50,14 @@ def add_file(name_data, filename):
         This function modifies the name_data dict to store information from
         the provided file name. This function does not return any value.
     """
-    pass
+    with open(filename) as f:
+        for line in f:
+            data = line.strip().replace(' ', '').split(',')
+            if len(data) == 1:
+                year = data[0]
+            else:
+                add_data_for_name(name_data, year, data[0], data[1])
+                add_data_for_name(name_data, year, data[0], data[2])
 
 
 def read_files(filenames):
@@ -54,7 +71,10 @@ def read_files(filenames):
     Returns:
         name_data (dict): the dict storing all baby name data in a structured manner
     """
-    pass
+    name_data = {}
+    for filename in filenames:
+        add_file(name_data, filename)
+    return name_data
 
 
 def search_names(name_data, target):
@@ -71,7 +91,11 @@ def search_names(name_data, target):
         matching_names (List[str]): a list of all names from name_data that contain
                                     the target string
     """
-    pass
+    names = []
+    for name in name_data:
+        if target in name.lower():
+            names.append(name)
+    return names
 
 
 def print_names(name_data):

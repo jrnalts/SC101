@@ -27,8 +27,11 @@ def make_canvas(width, height):
 
 
 def main():
-    pass
-    
+    window = make_canvas(1200, 700)
+
+    window.create_text(0, 0, text='SC101', anchor=tk.NW, font='times 20')
+    window.create_line(0, 0, 1200, 700)
+    tk.mainloop()
 
 if __name__ == '__main__':
     main()

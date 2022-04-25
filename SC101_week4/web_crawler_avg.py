@@ -13,15 +13,13 @@ from bs4 import BeautifulSoup
 
 
 def main():
-	url = 'http://www.imdb.com/chart/top'
-	response = requests.get(url)
-	html = response.text
-	soup = BeautifulSoup(html)
-	#########################
-	#                       #
-	#         TODO:         #
-	#                       #
-	#########################
+	res = requests.get('https://www.imdb.com/chart/top/')
+	tags = BeautifulSoup(res.text).find_all('td', {'class', 'ratingColumn imdbRating'})
+	total = 0
+	for tag in tags:
+		rate = tag.text
+		total += float(rate)
+	print(total/250)
 
 
 if __name__ == '__main__':

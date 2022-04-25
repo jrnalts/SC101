@@ -13,15 +13,17 @@ from bs4 import BeautifulSoup
 
 
 def main():
-	url = 'http://www.imdb.com/chart/top'
-	response = requests.get(url)
-	html = response.text
-	soup = BeautifulSoup(html)
-	#########################
-	#                       #
-	#         TODO:         #
-	#                       #
-	#########################
+	res = requests.get('https://www.imdb.com/chart/top/')
+	tags = BeautifulSoup(res.text).find_all('td', {'class', 'titleColumn'})
+	d = {}
+	for tag in tags:
+		director = tag.a['title'].split(',')[0]
+		if director in d:
+			d[director] += 1
+		else:
+			d[director] = 1
+	for director, count in sorted(d.items(), key=lambda e: e[1]):
+		print(f'{director}: {count}')
 
 
 if __name__ == '__main__':

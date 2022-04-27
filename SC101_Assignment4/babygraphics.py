@@ -43,7 +43,19 @@ def get_x_coordinate(width, year_index):
         x_coordinate (int): The x coordinate of the vertical line associated
                             with the current year.
     """
-    pass
+    # 圖表寬
+    chart_width = width - GRAPH_MARGIN_SIZE*2
+
+    # 起始點
+    start = GRAPH_MARGIN_SIZE
+
+    # 等分
+    equal_part = chart_width / (len(YEARS)-2)
+
+    # 取得 X座標
+    x_coordinate = start + equal_part * year_index
+
+    return x_coordinate
 
 
 def draw_fixed_lines(canvas):
@@ -56,8 +68,18 @@ def draw_fixed_lines(canvas):
     canvas.delete('all')            # delete all existing lines from the canvas
 
     # ----- Write your code below this line ----- #
+    m = GRAPH_MARGIN_SIZE
+    width = canvas.winfo_width()
+    height = canvas.winfo_height()
+    canvas.create_line(m, m, width-m, m)
+    canvas.create_line(m, height-m, width-m, height-m)
 
-    pass
+    for i in range(len(YEARS)):
+        x = get_x_coordinate(width, i)
+        canvas.create_line(x, 0, x, height)
+
+        # 年份的 Y座標一律是 height-m
+        canvas.create_text(x+TEXT_DX, height-m, text=YEARS[i], anchor=tkinter.NW)
 
 
 def draw_names(canvas, name_data, lookup_names):

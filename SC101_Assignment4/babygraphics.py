@@ -43,17 +43,17 @@ def get_x_coordinate(width, year_index):
         x_coordinate (int): The x coordinate of the vertical line associated
                             with the current year.
     """
-    grid_width = width - GRAPH_MARGIN_SIZE*2        # 圖表寬
-    start = GRAPH_MARGIN_SIZE                       # 起始點
-    equal_part = grid_width / len(YEARS)-2          # 等分
+    grid_width = width - GRAPH_MARGIN_SIZE * 2  # 圖表寬
+    start = GRAPH_MARGIN_SIZE  # 起始點
+    equal_part = grid_width / len(YEARS) - 2  # 等分
     x_coordinate = start + equal_part * year_index  # 取得X座標
     return x_coordinate
 
 
 def get_y_coordinate(height, rank_index):
-    grid_height = height - GRAPH_MARGIN_SIZE * 2    # 圖表高
-    start = GRAPH_MARGIN_SIZE                       # 起始點
-    equal_part = grid_height / 1000                 # 等分
+    grid_height = height - GRAPH_MARGIN_SIZE * 2  # 圖表高
+    start = GRAPH_MARGIN_SIZE  # 起始點
+    equal_part = grid_height / 1000  # 等分
     y_coordinate = start + equal_part * rank_index  # 取得Y座標
     return y_coordinate
 
@@ -65,21 +65,21 @@ def draw_fixed_lines(canvas):
     Input:
         canvas (Tkinter Canvas): The canvas on which we are drawing.
     """
-    canvas.delete('all')            # delete all existing lines from the canvas
+    canvas.delete('all')  # delete all existing lines from the canvas
 
     # ----- Write your code below this line ----- #
     m = GRAPH_MARGIN_SIZE
     width = canvas.winfo_width()
     height = canvas.winfo_height()
-    canvas.create_line(m, m, width-m, m)
-    canvas.create_line(m, height-m, width-m, height-m)
+    canvas.create_line(m, m, width - m, m)
+    canvas.create_line(m, height - m, width - m, height - m)
 
     for i in range(len(YEARS)):
         x = get_x_coordinate(width, i)
         canvas.create_line(x, 0, x, height)
 
         # 年份的 Y座標一律是 height-m
-        canvas.create_text(x+TEXT_DX, height-m, text=YEARS[i], anchor=tkinter.NW)
+        canvas.create_text(x + TEXT_DX, height - m, text=YEARS[i], anchor=tkinter.NW)
 
 
 def draw_names(canvas, name_data, lookup_names):
@@ -95,7 +95,7 @@ def draw_names(canvas, name_data, lookup_names):
     Returns:
         This function does not return any value.
     """
-    draw_fixed_lines(canvas)        # draw the fixed background grid
+    draw_fixed_lines(canvas)  # draw the fixed background grid
 
     # ----- Write your code below this line ----- #
     width = canvas.winfo_width()
@@ -110,27 +110,28 @@ def draw_names(canvas, name_data, lookup_names):
             for year in sorted(out_of_name_data):
                 x = get_x_coordinate(width, YEARS.index(int(year)))
                 y = height - GRAPH_MARGIN_SIZE
-                rank = '*'
-                points.append((x, y, rank))
+                points.append((year, x, y, '*'))
 
             # 取得該名字的年份&排名
             for year, rank in name_data[name].items():
-                if int(rank) < 1000:
-                    x = get_x_coordinate(width, YEARS.index(int(year)))
-                    y = get_y_coordinate(height, int(rank))
-                points.append((x, y, rank))
+                x = get_x_coordinate(width, YEARS.index(int(year)))
+                y = get_y_coordinate(height, int(rank))
+                points.append((int(year), x, y, rank))
 
+            points = sorted(points)                                      # 重新排序
             line_color = COLORS[lookup_names.index(name) % len(COLORS)]  # 設定線條顏色
-            for p in sorted(points):
+
+            for p in points:
                 index = points.index(p)
-                if index < len(points)-1:
-                    np = points[index+1]
-                    canvas.create_line(p[0], p[1], np[0], np[1],
+                if index < len(points) - 1:
+                    np = points[index + 1]
+                    canvas.create_line(p[1], p[2], np[1], np[2],
                                        width=LINE_WIDTH,
                                        fill=line_color)
-                    canvas.create_text(p[0]+TEXT_DX, p[1],
-                                       text=f'{name} {p[2]}',
+                    canvas.create_text(p[1] + TEXT_DX, p[2],
+                                       text=f'{name} {p[3]}',
                                        anchor=tkinter.SW)
+
 
 # main() code is provided, feel free to read through it but DO NOT MODIFY
 def main():

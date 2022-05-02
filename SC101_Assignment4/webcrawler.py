@@ -37,8 +37,31 @@ def main():
         soup = BeautifulSoup(html)
 
         # ----- Write your code below this line ----- #
+        tags = soup.find_all('tbody')
+        m_num, f_num = total_by_gender(tags)
+        print(f'Male Number: {m_num}')
+        print(f'Female Number: {f_num}')
 
-        pass
+
+def total_by_gender(tags):
+    """
+    Input:
+        tags(str): content from popular baby names by web crawler.
+    Output:
+        m(int), f(int): summary of top 200 names by gender in decades.
+    """
+    m = f = 0  # Set Default of male/female number
+    for tag in tags:
+        for i, num in enumerate(tag.text.strip().split()):
+            num = num.replace(',', '')
+            if i >= 1000 and not num.isdigit():  # Only accept number / group with each 5 elements in top 200
+                break
+            else:
+                if i % 5 == 2:
+                    m += int(num)
+                elif i % 5 == 4:
+                    f += int(num)
+    return m, f
 
 
 if __name__ == '__main__':

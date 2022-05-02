@@ -71,15 +71,15 @@ def draw_fixed_lines(canvas):
     m = GRAPH_MARGIN_SIZE
     width = canvas.winfo_width()
     height = canvas.winfo_height()
-    canvas.create_line(m, m, width - m, m)
-    canvas.create_line(m, height - m, width - m, height - m)
+    canvas.create_line(m, m, width-m, m)
+    canvas.create_line(m, height-m, width-m, height-m)
 
     for i in range(len(YEARS)):
         x = get_x_coordinate(width, i)
         canvas.create_line(x, 0, x, height)
 
         # 年份的 Y座標一律是 height-m
-        canvas.create_text(x + TEXT_DX, height - m, text=YEARS[i], anchor=tkinter.NW)
+        canvas.create_text(x+TEXT_DX, height-m, text=YEARS[i], anchor=tkinter.NW)
 
 
 def draw_names(canvas, name_data, lookup_names):
@@ -101,36 +101,47 @@ def draw_names(canvas, name_data, lookup_names):
     width = canvas.winfo_width()
     height = canvas.winfo_height()
 
+    points = {}  # 紀錄要畫在圖上的位置
     for name in lookup_names:
-        if name in name_data:
-            points = []
-            # 名字排名在 1000 名之外
-            years = list(int(key) for key in name_data[name])
-            out_of_name_data = list(set(YEARS) - set(years))
-            for year in sorted(out_of_name_data):
-                x = get_x_coordinate(width, YEARS.index(int(year)))
-                y = height - GRAPH_MARGIN_SIZE
-                points.append((year, x, y, '*'))
+        if name in name_data:  # 確認名字，沒有資料就不往下做
+            # 所有年份都預設為第 1000 位
+            set_default_rank(width, height, points)
 
-            # 取得該名字的年份&排名
-            for year, rank in name_data[name].items():
-                x = get_x_coordinate(width, YEARS.index(int(year)))
-                y = get_y_coordinate(height, int(rank))
-                points.append((int(year), x, y, rank))
+            # 從資料內取出該名字的年份＆排名
+            get_rank_from(name_data, width, height, name, points)
 
-            points = sorted(points)                                      # 重新排序
-            line_color = COLORS[lookup_names.index(name) % len(COLORS)]  # 設定線條顏色
+            # 設定線條顏色
+            line_color = COLORS[lookup_names.index(name) % len(COLORS)]
 
-            for p in points:
-                index = points.index(p)
-                if index < len(points) - 1:
-                    np = points[index + 1]
-                    canvas.create_line(p[1], p[2], np[1], np[2],
-                                       width=LINE_WIDTH,
-                                       fill=line_color)
-                    canvas.create_text(p[1] + TEXT_DX, p[2],
-                                       text=f'{name} {p[3]}',
-                                       anchor=tkinter.SW)
+            # 將所有位置畫成線
+            draw_a_line(line_color, points, canvas, name)
+
+
+def set_default_rank(width, height, points):
+    for i, year in enumerate(YEARS):
+        x = get_x_coordinate(width, i)
+        y = height - GRAPH_MARGIN_SIZE
+        points[year] = (x, y, '*')
+
+
+def get_rank_from(name_data, width, height, name, points):
+    for year, rank in name_data[name].items():
+        if int(year) in YEARS:
+            x = get_x_coordinate(width, YEARS.index(int(year)))
+            y = get_y_coordinate(height, int(rank))
+            points[int(year)] = (x, y, rank)
+
+
+def draw_a_line(line_color, points, canvas, name):
+    for year, p in points.items():
+        if year != max(points):  # 因為會找下一個點連成線，所以最後的年份不用做
+            np = points[YEARS[YEARS.index(year) + 1]]
+            canvas.create_line(p[0], p[1], np[0], np[1],
+                               width=LINE_WIDTH,
+                               fill=line_color)
+            canvas.create_text(p[0] + TEXT_DX, p[1],
+                               text=f'{name} {p[2]}',
+                               anchor=tkinter.SW)
 
 
 # main() code is provided, feel free to read through it but DO NOT MODIFY

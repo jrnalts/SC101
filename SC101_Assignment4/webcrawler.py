@@ -34,7 +34,7 @@ def main():
         
         response = requests.get(url)
         html = response.text
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, features="html.parser")
 
         # ----- Write your code below this line ----- #
         tags = soup.find_all('tbody')
@@ -46,7 +46,7 @@ def main():
 def total_by_gender(tags):
     """
     Input:
-        tags(str): content from popular baby names by web crawler.
+        tags(str): content from popular names by web crawler.
     Output:
         m(int), f(int): summary of top 200 names by gender in decades.
     """

@@ -14,7 +14,15 @@ def main():
 
 
 def binary_permutations(n):
-	pass
+	binary_permutations_helper(n, '')
+
+
+def binary_permutations_helper(n, current_s):
+	if len(current_s) == n:
+		print(current_s)
+	else:
+		binary_permutations_helper(n, current_s+'0')
+		binary_permutations_helper(n, current_s+'1')
 
 
 if __name__ == '__main__':

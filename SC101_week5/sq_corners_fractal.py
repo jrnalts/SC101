@@ -14,6 +14,7 @@ from campy.gui.events.timer import pause
 # Constants
 SIZE = 300      # It controls the width and height of the GRect on canvas
 LEVEL = 3       # It controls the recursive depth of fractal
+DELAY = 200     # The pause time in miliseconds
 
 # This is the canvas for GRect
 window = GWindow(width=1000, height=800)
@@ -26,7 +27,24 @@ def main():
 
 
 def draw_rect(level, width, center_x, center_y):
-	pass
+	if level == 0:
+		return  # pass
+	else:
+		# 左上
+		draw_rect(level-1, width/2, center_x-width/2, center_y-width/2)
+		# 右下
+		draw_rect(level - 1, width / 2, center_x + width / 2, center_y + width / 2)
+
+		rect = GRect(width, width, x=center_x - width / 2, y=center_y - width / 2)
+		rect.filled = True
+		rect.fill_color = 'snow'
+		window.add(rect)
+		pause(DELAY)
+
+		# 右上
+		draw_rect(level-1, width/2, center_x+width/2, center_y-width/2)
+		# 左下
+		draw_rect(level-1, width/2, center_x-width/2, center_y+width/2)
 
 
 if __name__ == '__main__':

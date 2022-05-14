@@ -16,7 +16,7 @@ from campy.gui.events.timer import pause
 SPACE = 40           # The space between levels
 START_X = 50         # The starting x of the line
 START_Y = 50         # The starting y of the line
-START_WIDTH = 850    # The lenth of cantor set level 1
+START_WIDTH = 850    # The length of cantor set level 1
 LEVEL = 5            # The level of the cantor set
 DELAY = 100          # The pause time in miliseconds
 
@@ -30,9 +30,19 @@ def main():
 
 
 def cantor_set(x, y, width, level):
-	pass
+	if level == 0:
+		return  # pass
+	else:
+		# Draw on left side
+		cantor_set(x, y + SPACE, width / 3, level - 1)
 
-		
+		# Draw on right side
+		r_x = x + width * 2/3
+		cantor_set(r_x, y + SPACE, width / 3, level - 1)
+
+		line = GLine(x, y, x + width, y)
+		window.add(line)
+		pause(DELAY)
 
 
 if __name__ == '__main__':

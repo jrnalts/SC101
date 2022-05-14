@@ -19,7 +19,13 @@ def main():
 
 
 def is_palindrome(s):
-	pass
+	if len(s) == 1 or len(s) == 0:
+		return True
+	else:
+		if s[0] != s[-1]:
+			return False
+		else:
+			return is_palindrome(s[1:len(s)-1])
 
 
 if __name__ == '__main__':

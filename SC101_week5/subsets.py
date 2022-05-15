@@ -19,7 +19,20 @@ def list_sub_lists(lst):
     """
     :param lst: list[str], containing a number of characters
     """
-    pass
+    helper(lst, [], 0)
+
+
+def helper(lst, current_lst, current_i):
+    print(current_lst)
+    for i in range(current_i, len(lst)):
+        # Choose
+        current_lst.append(lst[i])
+
+        # Explore
+        helper(lst, current_lst, i+1)
+
+        # Un-choose
+        current_lst.pop()
 
 
 if __name__ == '__main__':

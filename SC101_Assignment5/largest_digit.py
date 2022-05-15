@@ -22,7 +22,17 @@ def find_largest_digit(n):
 	:param n:
 	:return:
 	"""
-	pass
+	return find_largest_digit_helper(abs(n), abs(n) % 10)
+
+
+def find_largest_digit_helper(current_n, largest):
+	if current_n % 10 >= largest:
+		largest = current_n % 10
+
+	if current_n // 10 == 0:
+		return largest
+	else:
+		return find_largest_digit_helper(current_n // 10, largest)
 
 
 if __name__ == '__main__':

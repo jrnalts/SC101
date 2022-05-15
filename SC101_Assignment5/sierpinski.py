@@ -25,20 +25,36 @@ window = GWindow(width=WINDOW_WIDTH, height=WINDOW_HEIGHT)  # The canvas to draw
 
 def main():
 	"""
-	TODO:
+	Draw Sierpinski Triangles
 	"""
 	sierpinski_triangle(ORDER, LENGTH, UPPER_LEFT_X, UPPER_LEFT_Y)
 
 
 def sierpinski_triangle(order, length, upper_left_x, upper_left_y):
 	"""
-	:param order:
-	:param length:
-	:param upper_left_x:
-	:param upper_left_y:
+	:param order: order of triangles
+	:param length: triangle's side length
+	:param upper_left_x: X coordinate of start point
+	:param upper_left_y: Y coordinate of start point
 	:return:
 	"""
-	pass
+	if order == 0:
+		return  # pass
+	else:
+		# Top
+		line = GLine(upper_left_x, upper_left_y, upper_left_x + length, upper_left_y)
+		window.add(line)
+		sierpinski_triangle(order - 1, length / 2, upper_left_x, upper_left_y)
+
+		# # Right
+		line = GLine(upper_left_x + length, upper_left_y, upper_left_x + length * 0.5, upper_left_y + length * 0.866)
+		window.add(line)
+		sierpinski_triangle(order - 1, length / 2, upper_left_x + length * 0.5, upper_left_y)
+
+		# # Left
+		line = GLine(upper_left_x, upper_left_y, upper_left_x + length * 0.5, upper_left_y + length * 0.866)
+		window.add(line)
+		sierpinski_triangle(order-1, length/2, upper_left_x + length * 0.25, upper_left_y + (length * 0.866) / 2)
 
 
 if __name__ == '__main__':

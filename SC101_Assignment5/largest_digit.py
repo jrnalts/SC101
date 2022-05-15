@@ -19,17 +19,18 @@ def main():
 
 def find_largest_digit(n):
 	"""
-	:param n:
-	:return:
+	:param n: (Integer): number for check.
+ 	:return: (Integer): The largest digit.
 	"""
+	# Helper only accept positive value and get last digit form n
 	return find_largest_digit_helper(abs(n), abs(n) % 10)
 
 
 def find_largest_digit_helper(current_n, largest):
-	if current_n % 10 >= largest:
+	if current_n % 10 >= largest:  # Compare digit value
 		largest = current_n % 10
 
-	if current_n // 10 == 0:
+	if current_n // 10 == 0:  # Last Digit
 		return largest
 	else:
 		return find_largest_digit_helper(current_n // 10, largest)

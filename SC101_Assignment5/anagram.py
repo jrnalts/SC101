@@ -22,32 +22,66 @@ import time                   # This file allows you to calculate the speed of y
 FILE = 'dictionary.txt'       # This is the filename of an English dictionary
 EXIT = '-1'                   # Controls when to stop the loop
 
+# Global variable
+dic = {}
+
 
 def main():
-    """
-    TODO:
-    """
-    start = time.time()
-    ####################
-    #                  #
-    #       TODO:      #
-    #                  #
-    ####################
-    end = time.time()
-    print('----------------------------------')
-    print(f'The speed of your anagram algorithm: {end-start} seconds.')
+    global dic
+
+    print('Welcome to stanCode "Anagram Generator" (or -1 to quit)')
+    while True:
+        s = str(input('Find anagrams for: '))
+        dic = read_dictionary(s)
+        if s == EXIT:
+            break
+        else:
+            start = time.time()
+            ####################
+
+            find_anagrams(s, len(s))
+
+            ####################
+            end = time.time()
+            print('----------------------------------')
+            print(f'The speed of your anagram algorithm: {end - start} seconds.')
 
 
-def read_dictionary():
-    pass
+def read_dictionary(s):
+    global dic
+
+    with open(FILE) as f:
+        for line in f:
+            word = line.strip()
+            for ch in s:
+                if word.startswith(ch) and len(word) == len(s):
+                    dic[word] = ''
+    return dic
 
 
-def find_anagrams(s):
+def find_anagrams(s, len_s):
     """
     :param s:
     :return:
     """
-    pass
+    anagrams = []
+    print('Searching...')
+    find_anagrams_helper(s, len_s, '', anagrams)
+
+    print(f'{len(anagrams)} anagrams: {anagrams}')
+
+
+def find_anagrams_helper(s, len_s, current_s, anagrams):
+    if len(current_s) == len_s:
+        if current_s in dic and current_s not in anagrams:
+            print(f'Found: {current_s}')
+            anagrams.append(current_s)
+    else:
+        for ch in s:
+            if current_s.count(ch) == s.count(ch):
+                pass
+            else:
+                find_anagrams_helper(s, len_s, current_s + ch, anagrams)
 
 
 def has_prefix(sub_s):

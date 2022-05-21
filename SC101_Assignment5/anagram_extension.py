@@ -6,7 +6,7 @@ This program recursively finds all the anagram(s)
 for the word input by user and terminates when the
 input string matches the EXIT constant defined
 at line 19
-
+4
 If you correctly implement this program, you should see the
 number of anagrams for each word listed below:
     * arm -> 3 anagrams
@@ -23,16 +23,16 @@ FILE = 'dictionary.txt'       # This is the filename of an English dictionary
 EXIT = '-1'                   # Controls when to stop the loop
 
 # Global variable
-dic = []
+dic = {}
 
 
 def main():
     global dic
-    dic = read_dictionary()
 
     print('Welcome to stanCode "Anagram Generator" (or -1 to quit)')
     while True:
         s = str(input('Find anagrams for: '))
+        dic = read_dictionary(s)
 
         if s == EXIT:
             break
@@ -44,48 +44,56 @@ def main():
 
             ####################
             end = time.time()
+
         print('----------------------------------')
         print(f'The speed of your anagram algorithm: {end - start} seconds.')
 
 
-def read_dictionary():
+def read_dictionary(s):
     global dic
 
     with open(FILE) as f:
         for line in f:
-            dic.append(line.strip())
+            word = line.strip()
+            if len(s) == len(word):
+                if sorted(word) == sorted(s):
+                    dic[word] = ''
     return dic
 
 
 def find_anagrams(s, len_s):
     """
-    :param s:(str) input word for searching
-    :param len_s:(int) length of input word
-    :return: anagrams of the input word
+    :param s:
+    :return:
     """
-    anagrams = set()
+    anagrams = []
     for voc in dic:
-        if len(voc) == len_s:
-            if sorted(voc) == sorted(s):
-                print('Searching...')
-                find_anagrams_helper(s, len_s, '', anagrams, voc)
+        find_anagrams_helper(s, len_s, [], anagrams, voc)
 
     print(f'{len(anagrams)} anagrams: {anagrams}')
 
 
 def find_anagrams_helper(s, len_s, current_s, anagrams, voc):
-    if voc.startswith(current_s):  # Prunning for faster searching
-        if len(current_s) == len(voc):  # Compare length
-            if current_s == voc and current_s not in anagrams:  # Check if word in the dictionary and we don't have it.
-                print(f'Found: {current_s}')
-                anagrams.add(current_s)  # Collect the match word into anagrams
-        else:
-            for ch in s:
-                if current_s.count(ch) == s.count(ch):
-                    pass
-                else:
-                    find_anagrams_helper(s, len_s, current_s + ch, anagrams, voc)
+    word = ''.join(current_s)
+    if voc.startswith(word):
+        if word not in anagrams:
+            if len(word) == len_s:
+                print('Searching...')
+                anagrams.append(word)
+                print(f'Found: {word}')
+            else:
+                for ch in s:
+                    if current_s.count(ch) != s.count(ch):
+                        # Choose
+                        current_s.append(ch)
+
+                        # Explore
+                        find_anagrams_helper(s, len_s, current_s, anagrams, voc)
+
+                        # Un-choose
+                        current_s.pop()
 
 
 if __name__ == '__main__':
     main()
+

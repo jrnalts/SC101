@@ -6,7 +6,7 @@ This program recursively finds all the anagram(s)
 for the word input by user and terminates when the
 input string matches the EXIT constant defined
 at line 19
-
+4
 If you correctly implement this program, you should see the
 number of anagrams for each word listed below:
     * arm -> 3 anagrams
@@ -40,7 +40,7 @@ def main():
             start = time.time()
             ####################
 
-            find_anagrams(s, len(s))
+            find_anagrams(s)
 
             ####################
             end = time.time()
@@ -53,38 +53,26 @@ def read_dictionary():
 
     with open(FILE) as f:
         for line in f:
-            dic.append(line.strip())
+            word = line.strip()
+            dic.append(word)
+
     return dic
 
 
-def find_anagrams(s, len_s):
+def find_anagrams(s):
     """
-    :param s:(str) input word for searching
-    :param len_s:(int) length of input word
-    :return: anagrams of the input word
+    :param s:
+    :return:
     """
-    anagrams = set()
-    for voc in dic:
-        if len(voc) == len_s:
-            if sorted(voc) == sorted(s):
+    anagrams = []
+    for word in dic:
+        if len(s) == len(word):
+            if sorted(word) == sorted(s):
                 print('Searching...')
-                find_anagrams_helper(s, len_s, '', anagrams, voc)
+                anagrams.append(word)
+                print(f'Found: {word}')
 
     print(f'{len(anagrams)} anagrams: {anagrams}')
-
-
-def find_anagrams_helper(s, len_s, current_s, anagrams, voc):
-    if voc.startswith(current_s):  # Prunning for faster searching
-        if len(current_s) == len(voc):  # Compare length
-            if current_s == voc and current_s not in anagrams:  # Check if word in the dictionary and we don't have it.
-                print(f'Found: {current_s}')
-                anagrams.add(current_s)  # Collect the match word into anagrams
-        else:
-            for ch in s:
-                if current_s.count(ch) == s.count(ch):
-                    pass
-                else:
-                    find_anagrams_helper(s, len_s, current_s + ch, anagrams, voc)
 
 
 if __name__ == '__main__':

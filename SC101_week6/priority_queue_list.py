@@ -18,7 +18,30 @@ def main():
     priority_queue = []
 
     print('--------------------------------')
-    # TODO:
+    while True:
+        name = str(input('Patient: '))  # isalpha
+        if name == EXIT:
+            break
+        priority = int(input('Priority: '))  # Positive?
+        data = (name, priority)
+
+        if len(priority_queue) == 0:
+            # First Data
+            priority_queue.append(data)
+        else:
+            # Prepend
+            if priority < priority_queue[0][1]:
+                # tie-breaking
+                priority_queue.insert(0, data)
+            # Append
+            elif priority >= priority_queue[-1][1]:
+                priority_queue.append(data)
+            # In-between
+            else:
+                for i in range(len(priority_queue)-1):
+                    if priority_queue[i][1] <= priority < priority_queue[i+1][1]:
+                        priority_queue.insert(i+1, data)
+                        break  # prevent insert duplicate data into queue
     print('--------------------------------')
 
     print(priority_queue)

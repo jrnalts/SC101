@@ -20,21 +20,46 @@ def main():
 	linked_list = None
 	##### Construct linked_list #####
 	print("Original linked_list: ")
+	linked_list = ListNode(('A', 3), None)
+	linked_list.next = ListNode(('B', 5), None)
+	linked_list.next = ListNode(('C', 7), None)
+
 	traversal(linked_list)
 	#################################
 
 	######## Prepend ########
 	print("After prepending ('Z', 0): ")
+	new_node = ListNode(('Z', 0), None)
+	new_node.next = linked_list
+	linked_list = new_node
+
 	traversal(linked_list)
 	#########################
 
 	######## Append #########
 	print("After appending ('D', 9): ")
+	new_node = ListNode(('D', 9), None)
+	cur = linked_list
+	while cur.next is not None:
+		cur = cur.next
+	cur.next = new_node
+
 	traversal(linked_list)
 	#########################
 
 	######### In between ############
 	print("After inserting ('X', 5): ")
+	new_node = ListNode(('X', 5), None)
+	cur = linked_list
+	while cur.next is not None:
+		if cur.val[1] <= new_node.val[1] < cur.next.val[1]:
+			new_node.next = cur.next
+			cur.next = new_node
+			break
+		else:
+			cur = cur.next
+
+
 	traversal(linked_list)
 	#################################
 	

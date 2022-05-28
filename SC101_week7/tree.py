@@ -11,9 +11,23 @@ BFS
 """
 
 
+class TreeNode:
+	def __init__(self, left, data, right):
+		self.left = left
+		self.val = data
+		self.right = right
+
+
 def main():
 	# Milestone 1: Construct a tree
 	root = None
+	leaf1 = TreeNode(None, 2, None)
+	leaf2 = TreeNode(None, 6, None)
+	leaf3 = TreeNode(None, 18, None)
+	leaf4 = TreeNode(None, 40, None)
+	node1 = TreeNode(leaf1, 4, leaf2)
+	node2 = TreeNode(leaf3, 19, leaf4)
+	root = TreeNode(node1, 17, node2)
 
 	# Milestone 2: 3 ways to traverse a tree
 	print('\n---------pre-order--------')
@@ -29,20 +43,41 @@ def main():
 
 
 def pre_order(root):
-	pass
+	if root is None:
+		pass
+	else:
+		print(root.val, end=',')
+		pre_order(root.left)
+		pre_order(root.right)
 
 
 def in_order(root):
-	pass
+	if root is None:
+		pass
+	else:
+		in_order(root.left)
+		print(root.val, end=',')
+		in_order(root.right)
 
 
 def post_order(root):
-	pass
+	if root is None:
+		pass
+	else:
+		post_order(root.left)
+		post_order(root.right)
+		print(root.val, end=',')
 
 
 def bfs(root):
-	pass
-	
+	queue = [root]
+	while len(queue) != 0:
+		node = queue.pop(0)
+		print(node.val, end=',')
+		if node.left is not None:
+			queue.append(node.left)
+		if node.right is not None:
+			queue.append(node.right)
 
 if __name__ == '__main__':
 	main()

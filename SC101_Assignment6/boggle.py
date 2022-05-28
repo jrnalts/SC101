@@ -25,8 +25,9 @@ def main():
 
 	read_dictionary()
 
-	# lst = give_letters()
-	lst = [['a', 'b', 'c', 'd'], ['e', 'f', 'g', 'h'], ['i', 'j', 'k', 'l'], ['m', 'n', 'o', 'p']]
+	lst = give_letters()
+	# 也可以用下方範例測試
+	# lst = [['a', 'b', 'c', 'd'], ['e', 'f', 'g', 'h'], ['i', 'j', 'k', 'l'], ['m', 'n', 'o', 'p']]
 
 	ans = []
 	boggle(lst, ans)
@@ -75,10 +76,12 @@ def boggle(lst, ans):
 
 			boggle_helper(kebab, ans, '')
 
+	print(f'There are {len(ans)} words in total')
+
 
 def boggle_helper(lst, ans_lst, current_str):
 	# Base case
-	if current_str in all_words and current_str not in ans_lst:
+	if current_str in all_words and len(current_str) >= 4 and current_str not in ans_lst:
 		ans_lst.append(current_str)
 		print('Found: ' + current_str)
 

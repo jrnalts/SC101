@@ -14,17 +14,35 @@ class ListNode:
         self.next = pointer
 
 
+def give_num(lst):
+    cur = lst
+    lst = []
+    while cur is not None:
+        lst.append(str(cur.val))
+        cur = cur.next
+
+    num_s = ''.join(lst)
+    if num_s != '':
+        return int(num_s)
+
+
 def add_2_numbers(l1: ListNode, l2: ListNode) -> ListNode:
-    #######################
-    #                     #
-    #        TODO:        #
-    #                     #
-    #######################
-    return None
+    total = give_num(l1) + give_num(l2)
+    total_num_lst = list(str(total)[::-1])
+
+    head = None
+    for val in total_num_lst:
+        val = int(val)
+        if head is None:
+            head = ListNode(val)
+            cur = head
+        else:
+            cur.next = ListNode(val)
+            cur = cur.next
+    return head
 
 
 ####### DO NOT EDIT CODE BELOW THIS LINE ########
-
 
 def traversal(head):
     """

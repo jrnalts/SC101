@@ -1,21 +1,49 @@
+# class MinStack:
+#     def __init__(self):
+#         """
+#         initialize your data structure here.
+#         """
+#         self.ds = [None]
+#
+#     def push(self, val: int) -> None:
+#         self.ds.append(val)
+#
+#     def pop(self) -> None:
+#         self.ds.pop()
+#
+#     def top(self) -> int:
+#         return self.ds[-1]
+#
+#     def get_min(self) -> int:
+#         return min(self.ds)
+
+
 class MinStack:
     def __init__(self):
-        """
-        initialize your data structure here.
-        """
-        pass
+        self.ds = []
+        self.min = []
 
     def push(self, val: int) -> None:
-        pass
+        self.ds.append(val)
+        if len(self.min) == 0:
+            self.min.append(val)
+        else:
+            if val <= self.min[-1]:
+                self.min.append(val)
 
     def pop(self) -> None:
-        pass
+        if len(self.ds) != 0:
+            e = self.ds.pop()
+            if e == self.min[-1]:
+                self.min.pop()
 
     def top(self) -> int:
-        pass
+        if len(self.ds) != 0:
+            return self.ds[-1]
 
     def get_min(self) -> int:
-        pass
+        if len(self.ds) != 0:
+            return self.min[-1]
 
 
 if __name__ == '__main__':

@@ -11,121 +11,106 @@ import time
 # we will be checking if a word exists by searching through it
 FILE = 'dictionary.txt'
 
-# Global variable
-all_words = []
-
-
 
 def main():
-	"""
+    start = time.time()
+    ####################
 
-	"""
-	start = time.time()
-	####################
+    dictionary = read_dictionary()
 
-	read_dictionary()
+    # lst = give_letters()
+    # example for testing
+    lst = [['f', 'y', 'c', 'l'], ['i', 'o', 'm', 'g'], ['o', 'r', 'i', 'l'], ['h', 'j', 'h', 'u']]
 
-	lst = give_letters()
-	# 也可以用下方範例測試
-	# lst = [['a', 'b', 'c', 'd'], ['e', 'f', 'g', 'h'], ['i', 'j', 'k', 'l'], ['m', 'n', 'o', 'p']]
+    boggle(lst, dictionary)
 
-	ans = []
-	boggle(lst, ans)
-
-	####################
-	end = time.time()
-	print('----------------------------------')
-	print(f'The speed of your boggle algorithm: {end - start} seconds.')
+    ####################
+    end = time.time()
+    print('----------------------------------')
+    print(f'The speed of your boggle algorithm: {end - start} seconds.')
 
 
 def read_dictionary():
-	"""
-	This function reads file "dictionary.txt" stored in FILE
-	and appends words in each line into a Python list
-	"""
-	with open(FILE, 'r') as f:
-		for line in f:
-			all_words.append(line.strip())
+    """
+    This function reads file "dictionary.txt" stored in FILE
+    and appends words in each line into a Python list
+    """
+    d = {}
+    with open(FILE, 'r') as f:
+        for line in f:
+            if len(line.strip()) >= 4:
+                d[line.strip()] = ''
+    return d
 
 
-def boggle(lst, ans):
-	for sub_idx, sub_lst in enumerate(lst):
-		for ch_idx, ch in enumerate(sub_lst):
-			kebab = []
-
-			# Left
-			if ch_idx != 0:
-				kebab.append(lst[sub_idx][ch_idx - 1])
-			# Right
-			if ch_idx != 3:
-				kebab.append(lst[sub_idx][ch_idx + 1])
-			# Top
-			if sub_idx != 0:
-				kebab.append(lst[sub_idx - 1][ch_idx])
-				if ch_idx != 0:
-					kebab.append(lst[sub_idx - 1][ch_idx - 1])
-				if ch_idx != 3:
-					kebab.append(lst[sub_idx - 1][ch_idx + 1])
-			# # Bottom
-			if sub_idx != 3:
-				kebab.append(lst[sub_idx + 1][ch_idx])
-				if ch_idx != 0:
-					kebab.append(lst[sub_idx + 1][ch_idx - 1])
-				if ch_idx != 3:
-					kebab.append(lst[sub_idx + 1][ch_idx + 1])
-
-			boggle_helper(kebab, ans, '')
-
-	print(f'There are {len(ans)} words in total')
+def boggle(lst, all_words):
+    ans = []
+    for sub_idx, sub_lst in enumerate(lst):  # 拋出每一列
+        for ch_idx, ch in enumerate(sub_lst):  # 拋出每一列裡的字母
+            if has_prefix(ch, all_words):
+                path = []
+                boggle_helper(ch, lst, sub_idx, ch_idx, ans, path, all_words)
+    print(f'There are {len(ans)} words in total')
 
 
-def boggle_helper(lst, ans_lst, current_str):
-	# Base case
-	if current_str in all_words and len(current_str) >= 4 and current_str not in ans_lst:
-		ans_lst.append(current_str)
-		print('Found: ' + current_str)
-
-	# Recursive case
-	else:
-		for i in range(len(lst)):
-			# Choose
-			current_str += lst[i]
-
-			# Explore
-			if has_prefix(current_str):
-				boggle_helper(lst, ans_lst, current_str)
-
-			# Un-choose
-			current_str = current_str[:-1]
+def index_exist(lst, index):
+    if 0 <= index < len(lst):
+        return True
+    return False
 
 
-def has_prefix(sub_s):
-	"""
-	:param sub_s: (str) A substring that is constructed by neighboring letters on a 4x4 square grid
-	:return: (bool) If there is any words with prefix stored in sub_s
-	"""
-	for word in all_words:
-		if word.startswith(sub_s):
-			return True
-	return False
+def boggle_helper(current_s, lst, sub_idx, ch_idx, ans, path, all_words):
+    if has_prefix(current_s, all_words):
+        # Base case
+        if current_s in all_words and current_s not in ans:
+            ans.append(current_s)
+            print(f'Found "{current_s}"')
+
+        # Recursive case
+        for i in range(3):
+            n_sub_idx = sub_idx + i - 1
+            if index_exist(lst, n_sub_idx):
+                for j in range(3):
+                    n_ch_idx = ch_idx + j - 1
+                    # skip case: self / path repeated / index not exist
+                    if i == 1 and j == 1 or \
+                            (n_sub_idx, n_ch_idx) in path or \
+                            not index_exist(lst[n_sub_idx], n_ch_idx):
+                        pass
+                    else:
+                        add_ch = lst[n_sub_idx][n_ch_idx]
+                        if current_s.count(add_ch) < sum(ch.count(add_ch) for ch in lst):
+                            boggle_helper(current_s + add_ch, lst, n_sub_idx, n_ch_idx,
+                                          ans, path + [(n_sub_idx, n_ch_idx)], all_words)
+
+
+def has_prefix(sub_s, words):
+    """
+    :param sub_s: (str) A substring that is constructed by neighboring letters on a 4x4 square grid
+    :return: (bool) If there is any words with prefix stored in sub_s
+    """
+    for word in words:
+        if word.startswith(sub_s):
+            return True
+    return False
 
 
 def give_letters():
-	lst = []
-	i = 1
-	while True:
-		if len(lst) == 4:
-			break
-		else:
-			s = str(input(f'{i} row of letters: '))
-			if len(s.replace(' ', '')) != 4 or len(s.split(' ')) != 4 or not s.replace(' ', '').isalpha():
-				print('Illegal input')
-				pass
-			else:
-				lst.append(s.split(' '))
-				i += 1
-	return lst
+    lst = []
+    i = 1
+    while True:
+        if len(lst) == 4:
+            break
+        else:
+            s = str(input(f'{i} row of letters: ')).lower()
+            if len(s.replace(' ', '')) != 4 or len(s.split(' ')) != 4 or not s.replace(' ', '').isalpha():
+                print('Illegal input')
+                pass
+            else:
+                lst.append(s.split(' '))
+                i += 1
+    return lst
 
 
 if __name__ == '__main__':
-	main()
+    main()

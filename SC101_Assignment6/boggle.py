@@ -16,13 +16,11 @@ def main():
     start = time.time()
     ####################
 
-    dictionary = read_dictionary()
-
-    # lst = give_letters()
+    lst = give_letters()
     # example for testing
-    lst = [['f', 'y', 'c', 'l'], ['i', 'o', 'm', 'g'], ['o', 'r', 'i', 'l'], ['h', 'j', 'h', 'u']]
+    # lst = (['f', 'y', 'c', 'l'], ['i', 'o', 'm', 'g'], ['o', 'r', 'i', 'l'], ['h', 'j', 'h', 'u'])
 
-    boggle(lst, dictionary)
+    boggle(lst, read_dictionary(flatten(lst)))
 
     ####################
     end = time.time()
@@ -30,7 +28,7 @@ def main():
     print(f'The speed of your boggle algorithm: {end - start} seconds.')
 
 
-def read_dictionary():
+def read_dictionary(lst):
     """
     This function reads file "dictionary.txt" stored in FILE
     and appends words in each line into a Python list
@@ -38,8 +36,10 @@ def read_dictionary():
     d = {}
     with open(FILE, 'r') as f:
         for line in f:
-            if len(line.strip()) >= 4:
-                d[line.strip()] = ''
+            ls = line.strip()
+            if len(ls) >= 4:
+                if ls.startswith(lst):
+                    d[ls] = ''
     return d
 
 
@@ -57,6 +57,17 @@ def index_exist(lst, index):
     if 0 <= index < len(lst):
         return True
     return False
+
+
+def flatten(lst):
+    flatten_lst = []
+    for sub_lst in lst:
+        if type(sub_lst) is not list:
+            pass
+        else:
+            for e in sub_lst:
+                flatten_lst.append(e)
+    return tuple(flatten_lst)
 
 
 def boggle_helper(current_s, lst, sub_idx, ch_idx, ans, path, all_words):
@@ -109,7 +120,7 @@ def give_letters():
             else:
                 lst.append(s.split(' '))
                 i += 1
-    return lst
+    return tuple(lst)
 
 
 if __name__ == '__main__':

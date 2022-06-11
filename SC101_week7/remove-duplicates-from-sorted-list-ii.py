@@ -39,8 +39,57 @@ class Solution:
         return dummy.next
 
 
-def main():
-    # give example
+def main(head):
+    if head is None:
+        return head
+    else:
+        head_lst = []
+        tail_lst = []
+        cur = head
+
+    while cur.next is not None:
+        if cur.val < x:
+            head_lst.append(cur.val)
+        else:
+            tail_lst.append(cur.val)
+            cur = cur.next
+        final_lst = head_lst + tail_lst
+        dummy = ListNode()
+        cur = dummy.next
+        for val in final_lst:
+            cur = ListNode(val)
+            cur = cur.next
+
+    return dummy.next
+
+    if head is None:
+        return head
+    else:
+        dummy = dummy2 = ListNode()
+        new_head = dummy.next
+        tail = dummy2.next
+
+        front_cur = new_head  # 裝 < x 的
+        tail_cur = tail  # 裝 >= x 的
+
+    cur = head
+    while cur is not None:
+        if cur.val < x:
+            front_cur.next = cur.val
+            front_cur = front_cur.next
+        else:
+            tail_cur.next = cur.val
+            tail_cur = tail_cur.next
+        cur = cur.next
+
+    cur = new_head
+    while cur is not None:
+        if cur.next is None:  # 最後一顆 Node
+            cur.next = tail  # 接上 tail
+
+    return new_head
+
+# give example
     lst = [1, 2, 3, 3, 4, 4, 5]
     dummy = ListNode()
     cur = dummy

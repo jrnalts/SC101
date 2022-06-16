@@ -5,23 +5,17 @@ https://stancode.tw/
 
 
 ## Project Source Codes:
-* Hangman Game
-  * python semantics & syntax
-* Weather Master
-  * python semantics & syntax
-* Myphotoshop
-image processing
-* Pedestrain Removing Application
-  * image processing
-* My Drawing
-  * python drawing
-* Breakout Game
+* 01. My Drawing
+  * drawing Disney character: Wall-e with python extension
+* 02. Breakout Game
   * animation & game designing
-* Name_Popularity_Searching System
+* 03. Name Popularity Searching
   * data structure
 * Sierpinski
   * recursive functions
-* Anagram Game Solver
+* 05. Anagram Game Solver
   * recursive functions
-* Boggle Game Solver
+* 06. Boggle Game Solver
   * recursive functions
+* 07. Photoshop
+  * image processing

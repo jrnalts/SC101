@@ -1,6 +1,6 @@
 # SC101
 
-Python Course of SC101 on Mar 2022
+Python Course of SC101 on Mar 2022 <br>
 https://stancode.tw/
 
 
